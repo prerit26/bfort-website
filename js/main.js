@@ -51,15 +51,28 @@
     counters.forEach(function (el) { co.observe(el); });
   }
 
-  // Contact form (static demo)
+  // Contact form -> WhatsApp
   var form = document.querySelector(".form");
   if (form) {
     form.addEventListener("submit", function (ev) {
       ev.preventDefault();
+      var val = function (n) {
+        var el = form.querySelector('[name="' + n + '"]');
+        return el && el.value ? el.value.trim() : "";
+      };
+      var lines = ["Hello BFORT, I'd like to make an enquiry."];
+      var name = val("name"), email = val("email"), phone = val("phone"),
+          topic = val("topic"), message = val("message");
+      if (name) lines.push("Name: " + name);
+      if (email) lines.push("Email: " + email);
+      if (phone) lines.push("Phone: " + phone);
+      if (topic) lines.push("Interested in: " + topic);
+      if (message) { lines.push(""); lines.push(message); }
+      var url = "https://wa.me/919337699099?text=" + encodeURIComponent(lines.join("\n"));
       var ok = form.querySelector(".form__ok");
-      if (ok) ok.style.display = "block";
-      form.reset();
-      if (ok) ok.scrollIntoView({ behavior: "smooth", block: "center" });
+      if (ok) { ok.style.display = "block"; ok.scrollIntoView({ behavior: "smooth", block: "center" }); }
+      var win = window.open(url, "_blank");
+      if (!win) window.location.href = url;
     });
   }
 
